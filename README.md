@@ -157,6 +157,8 @@ we gain efficiency by cloning C into new table D, and then placing the sum Combi
 
 Optimizing parameters such as the readahead threshold and batch size of a Scanner seems challenging.  There are many other parameters: number of compaction threads, number of scan and write threads, defining split locations, maybe even things like bloom filters or the other myriad parameters Accumulo has.
 
+A nice benefit to using compactions as the exection engine for one-time computation is better *interactive computing* support: that we may stop the computation by canceling the compaction.  We imagine a user scanning a computation's result table to see what the computation results "look like" as they complete, and also to monitor how many results come in.  The user will stop a computation if he doesn't like where it is going, or if he has enough results to work with at the next step.
+
 
 ###Transpose: A Non-Sorted-Order Computation
 As an example of a computation that does not output values in sorted order, take the use case of computing the transpose of a subset of an Accumulo table and storing the transposed subset in another table.  Taking the transpose here means switching entries' row and column qualifier.  The custom iterator stack is simple:
