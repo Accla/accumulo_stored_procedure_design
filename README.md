@@ -1,3 +1,5 @@
+DRAFT v2015-03-04
+
 Accumulo Server-Side Computation: Stored Procedure Tables starring SpGEMM
 ---
 Goal: to implement the concept of a stored procedure in Accumulo. 
@@ -157,7 +159,11 @@ we gain efficiency by cloning C into new table D, and then placing the sum Combi
 
 Optimizing parameters such as the readahead threshold and batch size of a Scanner seems challenging.  There are many other parameters: number of compaction threads, number of scan and write threads, defining split locations, maybe even things like bloom filters or the other myriad parameters Accumulo has.
 
+####Monitoring Progress
 A nice benefit to using compactions as the exection engine for one-time computation is better *interactive computing* support: that we may stop the computation by canceling the compaction.  We imagine a user scanning a computation's result table to see what the computation results "look like" as they complete, and also to monitor how many results come in.  The user will stop a computation if he doesn't like where it is going, or if he has enough results to work with at the next step.
+
+Another way to monitor progress is to periodically write to an "operation metadata table."
+When a tablet server makes enough progress on a tablet, it writes the row last processed to the special table to "check in."  If the operation is interrupted for any reason, it could recover its last result from the special table.  We may store other statistics in this table too, such as writes of number of entries processed to a column with a combiner.  It's hard to say whether the additional structure is worth it.
 
 
 ###Transpose: A Non-Sorted-Order Computation
